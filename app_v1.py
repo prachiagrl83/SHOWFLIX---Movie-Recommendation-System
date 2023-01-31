@@ -14,9 +14,9 @@ movies=pd.read_csv(r'./movies.csv')
 
 top_10 = pickle.load(open('./Popular_movies.sav', 'rb'))
 
-st.title("WBSFLIX")
+st.title("SHOWFLIX")
 with st.container():
-    st.subheader("Top 5 WBSFLIX Popular Movies")
+    st.subheader("Top 5 SHOWFLIX Popular Movies")
     movie_names=list(top_10['title'][0:5])
     # st.write(movie_names)
     
@@ -59,7 +59,7 @@ def top_n_movie(movie_id,n):
     corr_movie = pd.DataFrame(similar_to_movie, columns=['PearsonR'])
     corr_movie.dropna(inplace=True)
     movie_corr_summary = corr_movie.join(rating['rating_count'])
-    movie_corr_summary.drop(movie_id, inplace=True) # drop the inputed restaurant itself
+    movie_corr_summary.drop(movie_id, inplace=True) # drop the inputed movie itself
     top10 = movie_corr_summary[movie_corr_summary['rating_count']>=10].sort_values('PearsonR', ascending=False).head(5)
     top10 = top10.merge(movies, left_index=True, right_on="movieId")
     return top10
@@ -69,15 +69,22 @@ def top_n_movie(movie_id,n):
 # title = movies.loc[title_var[0], "title"]
 
 
-title_var = 273
-title = movies.loc[title_var, "title"]
+# # with Alis help --> mind taking the indexies instead of movie IDs
 
-items = pickle.load(open('./Item_movies.sav', 'rb'))
+a = movies.sample()
+
+m_var = a.index[0]
+m_title = movies.loc[m_var, "title"]
+m_Id = movies.loc[m_var, "movieId"]
+
+
+###  
+# items = pickle.load(open('./Item_movies.sav', 'rb'))
 
 with st.container():
     #st.subheader("Item Based Movie Recommendation System")
-    st.subheader(f"Because you liked :blue[_{title}_], You might also like..")
-    movie_names= top_n_movie(title_var, 5)
+    st.subheader(f"If you like :blue[_{m_title}_], You might also like..")
+    movie_names = top_n_movie(m_Id, 5)
     # st.write(movie_names)
     
 
@@ -88,7 +95,7 @@ from PIL import Image
 
 posters_list = []
 titles_list = []
-for i in top_n_movie(title_var, 5).title:
+for i in movie_names.title:
     link = mp.get_poster(title= i)
     #title_postlink = i, link
     posters_list.append(link)
