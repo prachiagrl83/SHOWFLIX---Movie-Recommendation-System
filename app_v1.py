@@ -6,6 +6,9 @@ import streamlit as st
 import pickle
 import movieposters as mp
 from sklearn.metrics.pairwise import cosine_similarity
+
+#st.set_page_config(page_title="Movie Recommendation System",layout="wide", )
+
 ratings=pd.read_csv(r'./ratings.csv')
 movies=pd.read_csv(r'./movies.csv')
 # posters=pd.read_csv(r'ml-latest-small/posters.csv')
